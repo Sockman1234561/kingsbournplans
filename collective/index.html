@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>The Collective · Build your plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Barlow:wght@400&display=swap" rel="stylesheet">
+<style>
+/* The Harpenden Collective's look, sampled from their website: charcoal on white, bright yellow, slate, Open Sans capitals, square buttons */
+:root{--ink:#2A2A2A;--black:#000000;--white:#FFFFFF;--grey:#858585;--line:#E3E3E3;--panel:#F4F4F4;--yellow:#FFFF00;--slate:#373B4D;--body:#2A2A2A;
+--font:'Open Sans',Helvetica,Arial,sans-serif;--btn:'Barlow','DIN Next',Helvetica,Arial,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--white);color:var(--body);font-family:var(--font);font-size:16px;line-height:1.5}
+.band{background:var(--white);padding:28px 20px 0;text-align:center}
+.band-inner,.wrap{max-width:600px;margin:0 auto}
+.eyebrow{font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey)}
+h1{margin:10px 0 6px;color:var(--ink);font-weight:700;font-size:30px;line-height:1.2;text-transform:uppercase;letter-spacing:.08em}
+.band p{margin:0 0 18px;color:var(--black);font-size:14px;letter-spacing:.06em;text-transform:uppercase}
+.band-inner::after{content:"";display:block;height:5px;background:var(--ink);margin:0 auto}
+.wrap{padding:20px 16px 130px}
+.progress{display:flex;gap:6px;margin:0 0 6px}
+.progress span{flex:1;height:5px;background:var(--line)}
+.progress span.on{background:var(--ink)}
+.stepno{font-family:var(--btn);font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin:0 0 14px}
+.step[hidden]{display:none}
+h2{margin:0 0 10px;color:var(--ink);font-weight:700;font-size:21px;line-height:1.3;text-transform:uppercase;letter-spacing:.07em;outline:none}
+.lead{margin:0 0 14px}
+.label{font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);margin:18px 0 8px}
+ul.dots{margin:0 0 16px;padding:0;list-style:none}
+ul.dots li{position:relative;padding-left:18px;margin-bottom:6px}
+ul.dots li::before{content:"";position:absolute;left:2px;top:9px;width:7px;height:7px;background:var(--ink)}
+.option{display:flex;gap:12px;align-items:flex-start;background:var(--white);border:1px solid var(--ink);padding:14px;margin-bottom:10px;cursor:pointer}
+.option:has(input:checked){background:var(--yellow)}
+.option input{flex:none;width:22px;height:22px;margin:2px 0 0;accent-color:var(--ink)}
+.option .text{flex:1;min-width:0}
+.option .title{display:block;font-weight:700;color:var(--ink)}
+.option .desc{display:block;font-size:14px;margin-top:2px}
+.price{font-weight:700;color:var(--ink)}
+.option .price{flex:none;text-align:right;white-space:nowrap}
+.tag{display:inline-block;font-family:var(--btn);font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:1px 8px;margin-top:6px}
+.tag.asked{background:var(--slate);color:var(--white)}
+.tag.ours{border:1px solid var(--ink);color:var(--ink)}
+.card{background:var(--panel);padding:14px;margin-bottom:10px}
+.stepper{display:flex;align-items:center;gap:12px}
+.stepper button{font:inherit;font-size:22px;font-weight:700;width:44px;height:44px;border:0;background:var(--ink);color:var(--white);cursor:pointer;line-height:1}
+.stepper button:disabled{opacity:.3;cursor:default}
+.count{min-width:40px;text-align:center;font-weight:700;font-size:24px;color:var(--ink)}
+.stepper .unit{font-size:15px;font-weight:700}
+.hint{font-size:14px;color:var(--ink);margin:10px 0 0}
+.builds{border-top:5px solid var(--ink);padding:4px 0 0;margin-top:22px}
+.brow{display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.brow .price{flex:none;white-space:nowrap}
+.small{font-size:14px}
+.nav{display:flex;gap:10px;margin-top:22px}
+.btn{font-family:var(--btn);font-weight:400;font-size:16px;letter-spacing:.1em;text-transform:uppercase;padding:12px 20px;min-height:48px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;border-radius:0}
+.btn.primary{flex:1;background:var(--ink);color:var(--white);border:1px solid var(--ink)}
+.btn.primary:disabled{opacity:.35;cursor:default}
+.btn.ghost{background:var(--white);color:var(--ink);border:1px solid var(--ink)}
+.summary{background:var(--panel);padding:16px}
+.summary ul{margin:0 0 10px;padding-left:20px}
+.summary li{margin-bottom:4px}
+.trow{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid #D0D0D0;font-weight:700;color:var(--ink);text-transform:uppercase;letter-spacing:.05em}
+.notes{padding-left:18px;margin:16px 0 0}
+.notes li{margin-bottom:6px;font-size:14px}
+footer{border-top:5px solid var(--ink);margin-top:24px;padding-top:12px;font-size:13px;display:flex;flex-wrap:wrap;gap:6px 24px}
+footer a{color:var(--ink)}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:var(--white);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
+.bar-inner{max-width:600px;margin:0 auto;display:flex;gap:28px}
+.bar .k{display:block;font-family:var(--btn);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow)}
+.fig{font-weight:700;font-size:22px}
+</style>
+</head>
+<body>
+
+<header class="band">
+<div class="band-inner">
+<h1>Build your plan</h1>
+<p>For The Harpenden Collective<br>15 November 2026</p>
+</div>
+</header>
+
+<main class="wrap">
+<div class="progress" id="progress" aria-hidden="true"></div>
+<p class="stepno" id="stepno"></p>
+
+<!-- Step 0: welcome -->
+<section class="step" data-step="0">
+<h2 tabindex="-1">Three quick questions</h2>
+<p class="lead">Answer one question at a time and the price builds up as you go. It takes about two minutes, and nothing is booked until we've talked it through together.</p>
+<ul class="dots">
+<li>Training sessions</li>
+<li>A day alongside you</li>
+<li>Ongoing support</li>
+</ul>
+<div class="nav"><button type="button" class="btn primary" data-next>Start</button></div>
+</section>
+
+<!-- Step 1: training -->
+<section class="step" data-step="1" hidden>
+<h2 tabindex="-1">How many training sessions would you like?</h2>
+<p class="lead">Each session is 1.5 hours for you and your team, at the Collective or online. You learn by building real tools for the Collective, so the know-how stays with you. The minimum is four sessions.</p>
+<label class="option"><input type="radio" name="training" value="no"><span class="text"><span class="title">No training for now</span></span><span class="price">£0</span></label>
+<label class="option"><input type="radio" name="training" value="yes"><span class="text"><span class="title">Add training sessions</span><span class="desc" data-price-text="session"></span></span></label>
+<div class="card" id="training-picker" hidden>
+<div class="stepper">
+<button type="button" id="train-minus" aria-label="One fewer session">−</button>
+<span class="count" id="train-count" aria-live="polite">4</span>
+<button type="button" id="train-plus" aria-label="One more session">+</button>
+<span class="unit" id="train-total"></span>
+</div>
+<p class="hint">If you also book a day with us (next question), we'll shape the sessions around what we see.</p>
+</div>
+<div class="nav"><button type="button" class="btn ghost" data-back>Back</button><button type="button" class="btn primary" data-next data-needs="training">Next</button></div>
+</section>
+
+<!-- Step 2: consultation day, with build prices for information -->
+<section class="step" data-step="2" hidden>
+<h2 tabindex="-1">Would you like us to spend a day alongside you?</h2>
+<p class="lead">Pick a normal working day. We sit in on the real admin with you, lend a hand where we can, and see how the Collective actually runs.</p>
+<div class="label">What it gives you</div>
+<ul class="dots">
+<li>Training shaped around how you and your team work</li>
+<li>A shortlist of jobs worth automating, each with its price</li>
+<li>The starting point for any build: we only build what we've seen will genuinely save you time</li>
+</ul>
+<label class="option"><input type="radio" name="consult" value="none"><span class="text"><span class="title">Not right now</span><span class="desc">Training and support are still available.</span></span><span class="price">£0</span></label>
+<label class="option"><input type="radio" name="consult" value="half"><span class="text"><span class="title">Half day</span><span class="desc">A morning or an afternoon.</span></span><span class="price" data-price="consult-half"></span></label>
+<label class="option"><input type="radio" name="consult" value="full"><span class="text"><span class="title">Full day</span><span class="desc">Best for seeing a whole day's admin, start to finish.</span></span><span class="price" data-price="consult-full"></span></label>
+
+<div class="builds">
+<div class="label">What builds cost</div>
+<p class="small" style="margin:0 0 10px">Builds are agreed after your day with us, so they aren't chosen here. The day comes first: it's how we make sure each build is worth doing, and you see the price before we start.</p>
+<div class="brow"><span><b>Everyday tool</b><br><span class="small">One job, done reliably every time. For example, the monthly renewals and billing check.</span></span><span class="price" data-price="tier1"></span></div>
+<div class="brow"><span><b>Connected workflow</b><br><span class="small">Several steps or tools working together. For example, website enquiries going straight into Capsule with a follow-up task.</span></span><span class="price" data-price="tier2"></span></div>
+<div class="brow"><span><b>Something bigger</b><br><span class="small">Such as a booking and membership system. We estimate the hours and agree the price with you before starting.</span></span><span class="price" data-price="tier3"></span></div>
+<p class="hint" id="builds-note-none" hidden>Without a day with us we can't take on builds, but you can add one later.</p>
+</div>
+<div class="nav"><button type="button" class="btn ghost" data-back>Back</button><button type="button" class="btn primary" data-next data-needs="consult">Next</button></div>
+</section>
+
+<!-- Step 3: support -->
+<section class="step" data-step="3" hidden>
+<h2 tabindex="-1">Would you like ongoing support once things are running?</h2>
+<p class="lead">Short, regular check-ins once things are up and running.</p>
+<label class="option"><input type="radio" name="support" value="none"><span class="text"><span class="title">No ongoing support</span><span class="desc">Book help as and when you need it.</span></span><span class="price">£0</span></label>
+<label class="option"><input type="radio" name="support" value="checkins"><span class="text"><span class="title">Two check-ins a month</span><span class="desc">Two 30-minute sessions a month, at the Collective or online, to fix niggles, answer questions and keep things running smoothly.</span></span><span class="price" data-price="support"></span></label>
+<div class="nav"><button type="button" class="btn ghost" data-back>Back</button><button type="button" class="btn primary" data-next data-needs="support">See my plan</button></div>
+</section>
+
+<!-- Step 4: summary -->
+<section class="step" data-step="4" hidden>
+<h2 tabindex="-1">Your plan</h2>
+<div class="summary">
+<ul id="list"></ul>
+<div class="trow"><span>One-off</span><span id="sum-oneoff">£0</span></div>
+<div class="trow"><span>Monthly</span><span id="sum-monthly">£0</span></div>
+<a class="btn primary" id="send" href="#" style="width:100%;margin-top:12px">Email my choices to Elias</a>
+<p class="small">Opens your email with your choices filled in, ready to send.</p>
+<p class="small" style="margin:14px 0 8px">Email not opening? Copy your plan and send it to <b>elias04jaffer@gmail.com</b>.</p>
+<button type="button" class="btn ghost" id="copy" style="width:100%">Copy my plan</button>
+<p class="small" id="copy-status" role="status" style="margin:8px 0 0"></p>
+<textarea id="plan-text" readonly hidden aria-label="Your plan as text" style="width:100%;height:180px;margin-top:8px;font:inherit;font-size:14px;padding:10px;border:1px solid var(--ink)"></textarea>
+</div>
+<ul class="notes">
+<li>Builds are agreed after a day with us, at a fixed price per build. If something turns out bigger than expected, we'll tell you before doing more.</li>
+<li>Your own software subscriptions (for example Zapier and your Capsule plan) are paid directly and aren't included.</li>
+<li id="valid"></li>
+</ul>
+<div class="nav"><button type="button" class="btn ghost" data-back>Change my answers</button></div>
+<footer>
+<span>Elias Jaffer · <a href="mailto:elias04jaffer@gmail.com">elias04jaffer@gmail.com</a> · 07402 127914</span>
+<span>Tom Lowry · <a href="mailto:tom.lwry@gmail.com">tom.lwry@gmail.com</a> · 07471 182326</span>
+</footer>
+</section>
+</main>
+
+<div class="bar" role="status">
+<div class="bar-inner">
+<div><span class="k">One-off</span><span class="fig" id="bar-oneoff">£0</span></div>
+<div><span class="k">Monthly</span><span class="fig" id="bar-monthly">£0</span></div>
+</div>
+</div>
+
+<script>
+// ---- Pricing: change these numbers to update every price on the page ----
+var CONSULT = {half: 100, full: 150};       // day alongside you
+var SESSION_HOURS = 1.5, SESSION_RATE = 50; // training: £ per hour
+var MIN_SESSIONS = 4, MAX_SESSIONS = 20;
+var TIER1 = 150, TIER2 = 250;               // £ per build (shown for information)
+var TIER3_RATE = 30;                        // £ per hour, estimated upfront
+var SUPPORT_SESSIONS = 2, SUPPORT_MINUTES = 30; // ongoing check-ins per month, at the session rate
+var VALID_UNTIL = '15 December 2026';
+var EMAIL_TO = 'elias04jaffer@gmail.com';
+// ---------------------------------------------------------------------------
+
+var SESSION_PRICE = Math.round(SESSION_HOURS * SESSION_RATE);
+var SUPPORT_PRICE = Math.round(SUPPORT_SESSIONS * SUPPORT_MINUTES / 60 * SESSION_RATE);
+var state = {step: 0, training: null, sessions: MIN_SESSIONS, consult: null, support: null};
+var LAST = 4, QUESTIONS = 3;
+var planText = '';
+
+function gbp(n) { return '£' + n.toLocaleString('en-GB'); }
+function $(s) { return document.querySelector(s); }
+function $$(s) { return Array.prototype.slice.call(document.querySelectorAll(s)); }
+
+function paintPrices() {
+  $('[data-price="consult-half"]').textContent = gbp(CONSULT.half);
+  $('[data-price="consult-full"]').textContent = gbp(CONSULT.full);
+  $('[data-price-text="session"]').textContent = gbp(SESSION_PRICE) + ' per 1.5-hour session, minimum of ' + MIN_SESSIONS + '.';
+  $('[data-price="tier1"]').textContent = gbp(TIER1) + ' each';
+  $('[data-price="tier2"]').textContent = gbp(TIER2) + ' each';
+  $('[data-price="tier3"]').textContent = gbp(TIER3_RATE) + ' an hour';
+  $('[data-price="support"]').textContent = gbp(SUPPORT_PRICE) + '/month';
+  $('#valid').textContent = 'Prices valid until ' + VALID_UNTIL + '.';
+}
+
+function totals() {
+  var oneoff = 0, monthly = 0, lines = [];
+  if (state.training === 'yes') {
+    var t = state.sessions * SESSION_PRICE; oneoff += t;
+    lines.push(state.sessions + ' training sessions (1.5 hours each): ' + gbp(t));
+  }
+  if (state.consult === 'half' || state.consult === 'full') {
+    oneoff += CONSULT[state.consult];
+    lines.push((state.consult === 'half' ? 'Half day' : 'Full day') + ' alongside you: ' + gbp(CONSULT[state.consult]));
+    lines.push('Builds: agreed after the day, from ' + gbp(TIER1) + ' each');
+  }
+  if (state.support === 'checkins') {
+    monthly += SUPPORT_PRICE;
+    lines.push('Ongoing support, two 30-minute check-ins a month: ' + gbp(SUPPORT_PRICE) + ' a month');
+  }
+  return {oneoff: oneoff, monthly: monthly, lines: lines};
+}
+
+function render() {
+  var prog = $('#progress'); prog.innerHTML = '';
+  for (var i = 1; i <= QUESTIONS; i++) { var s = document.createElement('span'); if (state.step >= i) s.className = 'on'; prog.appendChild(s); }
+  $('#stepno').textContent = state.step >= 1 && state.step <= QUESTIONS ? 'Question ' + state.step + ' of ' + QUESTIONS : (state.step === LAST ? 'All done' : '');
+  $$('.step').forEach(function (sec) { sec.hidden = Number(sec.getAttribute('data-step')) !== state.step; });
+  $('#training-picker').hidden = state.training !== 'yes';
+  $('#train-count').textContent = state.sessions;
+  $('#train-total').textContent = 'sessions · ' + gbp(state.sessions * SESSION_PRICE);
+  $('#train-minus').disabled = state.sessions <= MIN_SESSIONS;
+  $('#train-plus').disabled = state.sessions >= MAX_SESSIONS;
+  $('#builds-note-none').hidden = state.consult !== 'none';
+  $$('[data-needs]').forEach(function (b) { b.disabled = state[b.getAttribute('data-needs')] === null; });
+  var t = totals();
+  $('#bar-oneoff').textContent = gbp(t.oneoff); $('#sum-oneoff').textContent = gbp(t.oneoff);
+  $('#bar-monthly').textContent = gbp(t.monthly); $('#sum-monthly').textContent = gbp(t.monthly);
+  var list = $('#list'); list.innerHTML = '';
+  (t.lines.length ? t.lines : ['Nothing chosen yet']).forEach(function (l) { var li = document.createElement('li'); li.textContent = l; list.appendChild(li); });
+  var body = 'Hi Elias,\n\nHere is the plan I put together:\n\n' +
+    (t.lines.length ? t.lines.map(function (l) { return '- ' + l; }).join('\n') : '- (nothing chosen yet)') +
+    '\n\nOne-off: ' + gbp(t.oneoff) + '\nMonthly: ' + gbp(t.monthly) + '\n\nThanks,\nNatalie';
+  planText = body;
+  $('#plan-text').value = body;
+  $('#send').href = 'mailto:' + EMAIL_TO + '?subject=' + encodeURIComponent('The Collective: my plan') + '&body=' + encodeURIComponent(body);
+}
+
+function go(step) {
+  state.step = Math.max(0, Math.min(LAST, step));
+  render();
+  window.scrollTo(0, 0);
+  var h = $('.step[data-step="' + state.step + '"] h2'); if (h) h.focus({preventScroll: true});
+}
+
+$$('[data-next]').forEach(function (b) { b.addEventListener('click', function () { go(state.step + 1); }); });
+$$('[data-back]').forEach(function (b) { b.addEventListener('click', function () { go(state.step - 1); }); });
+$$('input[name="training"]').forEach(function (r) { r.addEventListener('change', function () { state.training = r.value; render(); }); });
+$$('input[name="consult"]').forEach(function (r) { r.addEventListener('change', function () { state.consult = r.value; render(); }); });
+$$('input[name="support"]').forEach(function (r) { r.addEventListener('change', function () { state.support = r.value; render(); }); });
+$('#train-minus').addEventListener('click', function () { state.sessions = Math.max(MIN_SESSIONS, state.sessions - 1); render(); });
+$('#train-plus').addEventListener('click', function () { state.sessions = Math.min(MAX_SESSIONS, state.sessions + 1); render(); });
+
+function showText(msg) {
+  var ta = $('#plan-text'); ta.hidden = false; ta.focus(); ta.select();
+  $('#copy-status').textContent = msg;
+}
+$('#copy').addEventListener('click', function () {
+  var done = function () { $('#copy-status').textContent = 'Copied. Paste it into an email to elias04jaffer@gmail.com.'; };
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(planText).then(done, function () { fallbackCopy(); });
+    } else { fallbackCopy(); }
+  } catch (e) { fallbackCopy(); }
+});
+function fallbackCopy() {
+  var ta = $('#plan-text'); ta.hidden = false; ta.select();
+  var ok = false; try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  if (ok) { $('#copy-status').textContent = 'Copied. Paste it into an email to elias04jaffer@gmail.com.'; }
+  else { showText('Your plan is below: select it all, copy it and paste it into an email.'); }
+}
+
+paintPrices();
+render();
+</script>
+</body>
+</html>
