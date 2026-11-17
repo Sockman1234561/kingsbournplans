@@ -18,7 +18,7 @@
   color-scheme:light;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:hidden}
 html,body{margin:0}
 body{background:var(--paper);color:var(--ink);font:500 17px/1.55 var(--body);overflow-x:hidden;
   background-image:linear-gradient(to right,var(--grid) 1px,transparent 1px),linear-gradient(to bottom,var(--grid) 1px,transparent 1px);background-size:28px 28px}
@@ -197,6 +197,10 @@ ul.ticks li::after{content:"";position:absolute;left:8px;top:6px;width:6px;heigh
 .tl .knob:active{cursor:grabbing}
 .tl .endlab{position:absolute;top:52px;left:30px;white-space:nowrap;font:400 20px/1 var(--doodle);color:var(--ink);background:var(--gold-2);border:2px solid var(--ink);border-radius:10px;padding:4px 10px}
 .tl .endh.flip .endlab{left:auto;right:30px}
+.readout{display:none;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.readout span{font:400 19px/1 var(--doodle);border:2px solid var(--ink);border-radius:10px;padding:5px 10px}
+.ro-d{background:var(--blue);color:#fff}
+.ro-e{background:var(--gold-2)}
 .legend{display:flex;flex-wrap:wrap;gap:16px;font-size:14px;color:var(--grey);margin-top:16px}
 .legend i{display:inline-block;width:15px;height:15px;border:2px solid var(--ink);vertical-align:-2px;margin-right:6px;border-radius:4px}
 .endnote{font-size:15px;margin-top:10px;font-weight:700;color:var(--amber);min-height:1.5em}
@@ -274,9 +278,10 @@ footer{padding:26px 0 120px;border-top:3px solid var(--ink);font-size:14px;color
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
 
 @media (max-width:1240px){.rail{display:none}}
+@media (max-width:380px){.totals{grid-template-columns:1fr}.counter{gap:14px}.counter button{width:54px;height:54px}.big{font-size:60px;min-width:70px}.days{gap:10px}.day{font-size:36px}}
 @media (max-width:980px){
   .hero-in{grid-template-columns:1fr;padding-top:56px}
-  .topbar{position:static}
+  .topbar{position:static;margin-bottom:14px}
   .hero{padding-top:20px}
   .crowd{height:340px}
   .crowd .c1{height:300px}.crowd .c2{height:210px}.crowd .c3{height:250px}.crowd .c4{height:170px}
@@ -303,6 +308,18 @@ footer{padding:26px 0 120px;border-top:3px solid var(--ink);font-size:14px;color
   .big{font-size:72px;min-width:90px}
   .counter .sum{margin-left:0}
   .tl .note{display:none}
+  .readout{display:flex}
+  .tl .disclab,.tl .endlab{display:none}
+  .tl{height:178px;margin:0 6px}
+  .tl .mark{width:18px;height:18px;margin-left:-9px;top:69px;border-radius:6px;border-width:2px}
+  .tl .mark.disc{width:24px;height:24px;margin-left:-12px;top:66px}
+  .tl .knob{width:36px;height:36px;left:-18px}
+  .tl .months{font-size:11px;letter-spacing:.02em}
+  .tl .months span{padding-left:3px}
+  .panel{padding:20px;border-radius:22px}
+  .counter{gap:12px}
+  .counter .sum{width:100%;text-align:left;display:flex;gap:10px;align-items:baseline}
+  .lines li b{white-space:normal;text-align:right}
   .prep{display:none}
   .logo img{height:72px}
   .letter{padding:28px 20px 24px;transform:none}
@@ -311,8 +328,13 @@ footer{padding:26px 0 120px;border-top:3px solid var(--ink);font-size:14px;color
   .people{grid-template-columns:1fr}
   .toggle{flex-wrap:wrap;gap:14px}
   .toggle .tp{width:100%;justify-content:space-between;border-top:2px dashed #18181b33;padding-top:12px}
-  .ticket{left:12px;right:12px;bottom:12px;justify-content:space-between}
-  .ticket .v{font-size:22px}
+  .ticket{left:10px;right:10px;bottom:10px;justify-content:space-between;gap:10px;padding:10px 10px 10px 14px}
+  .ticket .v{font-size:19px}
+  .ticket .v.sm{font-size:16px}
+  .ticket a{padding:8px 12px;font-size:14px}
+  .letter-wrap{grid-template-columns:minmax(0,1fr)}
+  .tbox b{font-size:30px}
+  .lines li{font-size:15px}
   .crowd .bubble{font-size:19px}
 }
 </style>
@@ -498,6 +520,7 @@ footer{padding:26px 0 120px;border-top:3px solid var(--ink);font-size:14px;color
   <div class="wrap">
     <div class="ch-head reveal"><span class="ch-num" aria-hidden="true">6</span><div><h2 id="h-when">Ready before grant season</h2><p>You told us November to March is your window. Drag the <b>blue handle</b> to pick your discovery week and the <b>gold handle</b> to choose when you'd like to finish. Your sessions spread out to fit.</p></div></div>
     <div class="panel reveal">
+      <div class="readout" aria-hidden="true"><span class="ro-d" id="ro-d"></span><span class="ro-e" id="ro-e"></span></div>
       <div class="tl" id="tl">
         <div class="note" style="left:20%">quieter in December</div>
         <div class="note" style="left:66%">budgets in March</div>
@@ -657,6 +680,7 @@ function timeline(){
   var dk=$('#dknob'); dk.setAttribute('aria-valuenow',DISC); dk.setAttribute('aria-valuetext','Week of '+fmtWeek(DISC,true));
   var h=$('#endh'); h.style.left=pc(end)+'%'; h.classList.toggle('flip',!((end-DISC)<60) );
   $('#endlab').textContent='Finish by '+fmtMonth(end);
+  $('#ro-e').textContent='Finish by '+fmtMonth(end); $('#ro-d').textContent='Discovery w/c '+fmtWeek(DISC);
   var k=$('#knob'); k.setAttribute('aria-valuenow',end); k.setAttribute('aria-valuetext',fmtMonth(end));
   var weeks=Math.max(1,Math.round((end-DISC)/7)), gap=(end-start)/Math.max(1,n+state.days-1);
   var cm=clampMsg; clampMsg='';
